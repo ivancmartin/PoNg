@@ -10,6 +10,7 @@ game_font = pygame.font.Font("freesansbold.ttf",32)
 #setting up the main window
 screen_width = 1280
 screen_height = 930
+
 screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption('Pong')
 
@@ -30,7 +31,7 @@ class scuareBall:
     out_position : int
 
     def __init__(self):
-        self.draw = pygame.Rect(screen_width/2 - 15,screen_height/2 - 15,30,30)
+        self.draw = pygame.Rect(screen_width/2 - 15,screen_height/2 - 15,15,15)
         self.color = bg_color
         self.baseSpeed = 7
         self.speed_x = self.baseSpeed 
@@ -56,9 +57,43 @@ class scuareBall:
         if self.draw.left <= 0 or self.draw.left >= screen_width:
             self.restart()
             
-        if self.draw.colliderect(player.draw) or self.draw.colliderect(opponent.draw):
-            self.speed_x*=-1
-            self.speed_y*= random.choice((-1, 1))
+        if self.draw.colliderect(player.draw):
+            
+            if abs(self.draw.top - player.draw.bottom) < 10 and self.speed_y > 0:
+                print("ok 1.1")
+                self.speed_x*= -1
+                self.speed_y*= random.choice((-1, 1))
+                
+            if abs(self.draw.bottom- player.draw.top) < 10 and self.speed_y < 0:
+                print("ok 2.1")
+                self.speed_x*= -1
+                
+            if abs(self.draw.right - player.draw.left) < 11 and self.speed_x > 0 or abs(self.draw.left - player.draw.right) < 10 and self.speed_x > 0:
+                print("ok 3.1")
+                self.speed_x*= -1
+                self.speed_y*= random.choice((1, -1,)) 
+
+        if self.draw.colliderect(opponent.draw):
+            print ("1 collision ", abs(self.draw.top - opponent.draw.bottom) )
+            print ("2 collision ", abs(self.draw.bottom - opponent.draw.top) )
+            print ("3 collision ", abs(self.draw.right - opponent.draw.left) )
+            print ("c speed ", self.speed_y )
+
+            if abs(self.draw.top - opponent.draw.bottom) < 10 and self.speed_y > 0:
+                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_x*= -1
+                print("ok 1")
+
+            if abs(self.draw.bottom - opponent.draw.top) < 10 and self.speed_y < 0:
+                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_x*= -1
+                print("ok 2")
+
+            if abs(self.draw.right - opponent.draw.left) < 10 and self.speed_x < 0:
+                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_x*= -1
+                print("ok 3")
+            
             
 class Player:
     #att
@@ -164,7 +199,7 @@ while True:
     pygame.draw.aaline(screen,light_grey,(screen_width/2,0),(screen_width/2,screen_height))
     pygame.draw.rect(screen,light_grey,(screen_width/2 - 50,screen_height/2 - 50,100,100),1)
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(80)
     
     #print(clock.get_fps())
-    print(round(pygame.time.get_ticks()))
+    #print(round(pygame.time.get_ticks()))
