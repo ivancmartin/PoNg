@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from typing import Tuple
 import pygame, sys
 import random 
@@ -6,6 +7,7 @@ import random
 pygame.init()
 clock = pygame.time.Clock()
 game_font = pygame.font.Font("freesansbold.ttf",32)
+score_point = 1
 
 #setting up the main window
 screen_width = 1280
@@ -31,7 +33,7 @@ class scuareBall:
     out_position : int
 
     def __init__(self):
-        self.draw = pygame.Rect(screen_width/2 - 15,screen_height/2 - 15,15,15)
+        self.draw = pygame.Rect(screen_width/2 - 7,screen_height/2 - 7,15,15)
         self.color = bg_color
         self.baseSpeed = 7
         self.speed_x = self.baseSpeed 
@@ -43,13 +45,17 @@ class scuareBall:
 
     def restart(self):
         import random
+       
         self.out_position = self.draw.left 
-        self.speed_x = self.baseSpeed * random.choice([1,-1])
-        self.speed_y = 7
         self.draw.center = (screen_width/2,screen_height/2)
+        pygame.draw.aaline(screen,light_grey,(screen_width/2,0),(screen_width/2,screen_height))
+        
+        self.speed_x = 0
+        self.speed_y = 0
 
     def animation(self):
         #ball movement
+        
         self.draw.x += self.speed_x
         self.draw.y += self.speed_y
 
@@ -61,42 +67,42 @@ class scuareBall:
         if self.draw.colliderect(player.draw):
             self.speed_y = 7
             if abs(self.draw.top - player.draw.bottom) < 10 and self.speed_y > 0:
-                print("ok 1.1")
+                #print("ok 1.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 
-            if abs(self.draw.bottom- player.draw.top) < 10 and self.speed_y < 0:
-                print("ok 2.1")
+            if abs(self.draw.bottom - player.draw.top) < 10 and self.speed_y < 0:
+                #print("ok 2.1")
                 self.speed_x*= -1
                 
             if abs(self.draw.right - player.draw.left) < 11 and self.speed_x > 0 or abs(self.draw.left - player.draw.right) < 10 and self.speed_x > 0:
-                print("ok 3.1")
+                #print("ok 3.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1, 0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
 
         if self.draw.colliderect(opponent.draw):
             self.speed_y = 7
-            print ("1 collision ", abs(self.draw.top - opponent.draw.bottom) )
-            print ("2 collision ", abs(self.draw.bottom - opponent.draw.top) )
-            print ("3 collision ", abs(self.draw.right - opponent.draw.left) )
-            print ("c speed ", self.speed_y )
+            #print ("1 collision ", abs(self.draw.top - opponent.draw.bottom) )
+            #print ("2 collision ", abs(self.draw.bottom - opponent.draw.top) )
+            #print ("3 collision ", abs(self.draw.right - opponent.draw.left) )
+            #print ("c speed ", self.speed_y )
 
             if abs(self.draw.top - opponent.draw.bottom) < 10 and self.speed_y > 0:
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
-                print("ok 1")
+                #print("ok 1")
 
             if abs(self.draw.bottom - opponent.draw.top) < 10 and self.speed_y < 0:
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                #self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
-                print("ok 2")
+                #print("ok 2")
 
             if abs(self.draw.right - opponent.draw.left) < 10 and self.speed_x < 0:
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
-                print("ok 3")
+                #print("ok 3")
             
-            print ("self.speed_y ", self.speed_y )
+            #print ("self.speed_y ", self.speed_y )
             
 class Player:
     #att
@@ -132,6 +138,8 @@ class Player:
 
     def ai_activated(self,y_axys):
         
+        self.speed = 9
+
         #if (round(pygame.time.get_ticks()) % 300) == 0:
         #    self.random = random.randint(5, 10)
 
@@ -145,6 +153,12 @@ class Player:
         if self.draw.bottom - self.random >= y_axys + 50:
             self.draw.y -= self.speed
 
+def restart(player,opponent,ball):
+    player.draw = pygame.Rect(screen_width - 30,screen_height/2 - 70,10,140)
+    opponent.draw = pygame.Rect(30,screen_height/2 - 70,10,140)
+    ball.animation()
+    pass
+
 #Checkout how to inherit Player into a new class             
 
 #game rectangles / objects
@@ -152,8 +166,8 @@ ball = scuareBall()
 player = Player()
 opponent = Player()
 player.draw = pygame.Rect(screen_width - 30,screen_height/2 - 70,10,140)
-opponent.draw = pygame.Rect(15,screen_height/2 - 70,10,140)
-opponent.speed = 8
+opponent.draw = pygame.Rect(30,screen_height/2 - 70,10,140)
+#opponent.speed = 10
 
 while True:
     # Handling input
@@ -175,15 +189,17 @@ while True:
                 player.move_down()
     
     #movement
-    ball.animation()
+    
     player.animation()
     opponent.ai_activated(ball.draw.y)
 
     ##print(opponent.speed)
     if ball.out_position >= screen_width:
         opponent.score += 1
+        score_point  = pygame.time.get_ticks()
     elif ball.out_position < 0:
         player.score += 1
+        score_point  = pygame.time.get_ticks()
     ball.out_position = 0
 
     #Visual Elements
@@ -199,10 +215,32 @@ while True:
     screen.blit(game_font.render(f"{opponent.score}",False,light_grey),(screen_width/2 - 30, 30))
 
     #line drawed
-    pygame.draw.aaline(screen,light_grey,(screen_width/2,0),(screen_width/2,screen_height))
     pygame.draw.rect(screen,light_grey,(screen_width/2 - 50,screen_height/2 - 50,100,100),1)
+    pygame.draw.aaline(screen,light_grey,(screen_width/2,0),(screen_width/2,screen_height))
+
+    if score_point:
+        counter = 3
+        
+        if pygame.time.get_ticks() - score_point < 700:
+            pygame.draw.rect(screen,light_grey,(screen_width/2 - 25,screen_height/2 + 50,50,50),0)
+            screen.blit(game_font.render(f"{counter}",False,bg_color),(screen_width/2 - 8, screen_height/2 + 60))
+
+        if pygame.time.get_ticks() - score_point < 1400 and pygame.time.get_ticks() - score_point > 700:
+            pygame.draw.rect(screen,light_grey,(screen_width/2 - 25,screen_height/2 + 50,50,50),0)
+            screen.blit(game_font.render(f"{counter - 1}",False,bg_color),(screen_width/2 - 8, screen_height/2 + 60))
+
+        if pygame.time.get_ticks() - score_point > 1400:
+            pygame.draw.rect(screen,light_grey,(screen_width/2 - 25,screen_height/2 + 50,50,50),0)
+            screen.blit(game_font.render(f"{counter - 2}",False,bg_color),(screen_width/2 - 8, screen_height/2 + 60))
+            
+        if pygame.time.get_ticks() - score_point > 2100:
+            ball.speed_x = ball.baseSpeed * random.choice([1,-1])
+            ball.speed_y = ball.baseSpeed * random.choice([1,-1])
+            score_point = None
+    else:
+        ball.animation()
+        
     pygame.display.flip()
     clock.tick(80)
     
-    #print(clock.get_fps())
     #print(round(pygame.time.get_ticks()))
