@@ -45,6 +45,7 @@ class scuareBall:
         import random
         self.out_position = self.draw.left 
         self.speed_x = self.baseSpeed * random.choice([1,-1])
+        self.speed_y = 7
         self.draw.center = (screen_width/2,screen_height/2)
 
     def animation(self):
@@ -58,11 +59,11 @@ class scuareBall:
             self.restart()
             
         if self.draw.colliderect(player.draw):
-            
+            self.speed_y = 7
             if abs(self.draw.top - player.draw.bottom) < 10 and self.speed_y > 0:
                 print("ok 1.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((-1, 1))
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 
             if abs(self.draw.bottom- player.draw.top) < 10 and self.speed_y < 0:
                 print("ok 2.1")
@@ -71,29 +72,31 @@ class scuareBall:
             if abs(self.draw.right - player.draw.left) < 11 and self.speed_x > 0 or abs(self.draw.left - player.draw.right) < 10 and self.speed_x > 0:
                 print("ok 3.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1, 0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
 
         if self.draw.colliderect(opponent.draw):
+            self.speed_y = 7
             print ("1 collision ", abs(self.draw.top - opponent.draw.bottom) )
             print ("2 collision ", abs(self.draw.bottom - opponent.draw.top) )
             print ("3 collision ", abs(self.draw.right - opponent.draw.left) )
             print ("c speed ", self.speed_y )
 
             if abs(self.draw.top - opponent.draw.bottom) < 10 and self.speed_y > 0:
-                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
                 print("ok 1")
 
             if abs(self.draw.bottom - opponent.draw.top) < 10 and self.speed_y < 0:
-                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
                 print("ok 2")
 
             if abs(self.draw.right - opponent.draw.left) < 10 and self.speed_x < 0:
-                self.speed_y*= random.choice((1, -1,)) 
+                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.1,0.2,0.3,0.4,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
                 self.speed_x*= -1
                 print("ok 3")
             
+            print ("self.speed_y ", self.speed_y )
             
 class Player:
     #att
@@ -122,24 +125,24 @@ class Player:
             self.draw.bottom = screen_height - 10
 
     def move_up(self):
-        self.speed -= 7
+        self.speed -= 10
 
     def move_down(self):
-        self.speed += 7
+        self.speed += 10
 
     def ai_activated(self,y_axys):
         
-        if (round(pygame.time.get_ticks()) % 300) == 0:
-            self.random = random.randint(5, 10)
+        #if (round(pygame.time.get_ticks()) % 300) == 0:
+        #    self.random = random.randint(5, 10)
 
         if self.draw.top <= 10:
            self.draw.top = 10
         if self.draw.bottom >= screen_height - 10:
            self.draw.bottom = screen_height - 10
 
-        if self.draw.top + self.random <= y_axys:
+        if self.draw.top + self.random <= y_axys - 50:
             self.draw.y += self.speed
-        if self.draw.bottom - self.random >= y_axys:
+        if self.draw.bottom - self.random >= y_axys + 50:
             self.draw.y -= self.speed
 
 #Checkout how to inherit Player into a new class             
@@ -150,7 +153,7 @@ player = Player()
 opponent = Player()
 player.draw = pygame.Rect(screen_width - 30,screen_height/2 - 70,10,140)
 opponent.draw = pygame.Rect(15,screen_height/2 - 70,10,140)
-opponent.speed = 7
+opponent.speed = 8
 
 while True:
     # Handling input
