@@ -35,7 +35,7 @@ class scuareBall:
     def __init__(self):
         self.draw = pygame.Rect(screen_width/2 - 7,screen_height/2 - 7,15,15)
         self.color = bg_color
-        self.baseSpeed = 7
+        self.baseSpeed = 10
         self.speed_x = self.baseSpeed 
         self.speed_y = self.baseSpeed 
         self.out_position = 0
@@ -44,8 +44,6 @@ class scuareBall:
         pygame.draw.rect(screen,light_grey,self.draw)
 
     def restart(self):
-        import random
-       
         self.out_position = self.draw.left 
         self.draw.center = (screen_width/2,screen_height/2)
         pygame.draw.aaline(screen,light_grey,(screen_width/2,0),(screen_width/2,screen_height))
@@ -55,7 +53,6 @@ class scuareBall:
 
     def animation(self):
         #ball movement
-        
         self.draw.x += self.speed_x
         self.draw.y += self.speed_y
 
@@ -65,11 +62,10 @@ class scuareBall:
             self.restart()
             
         if self.draw.colliderect(player.draw):
-            self.speed_y = 7
+            self.speed_y = 8
             if abs(self.draw.top - player.draw.bottom) < 10 and self.speed_y > 0:
-                #print("ok 1.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1,-1.5)) 
                 
             if abs(self.draw.bottom - player.draw.top) < 10 and self.speed_y < 0:
                 #print("ok 2.1")
@@ -78,27 +74,27 @@ class scuareBall:
             if abs(self.draw.right - player.draw.left) < 11 and self.speed_x > 0 or abs(self.draw.left - player.draw.right) < 10 and self.speed_x > 0:
                 #print("ok 3.1")
                 self.speed_x*= -1
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1,-1.5))
 
         if self.draw.colliderect(opponent.draw):
-            self.speed_y = 7
+            self.speed_y = 8
             #print ("1 collision ", abs(self.draw.top - opponent.draw.bottom) )
             #print ("2 collision ", abs(self.draw.bottom - opponent.draw.top) )
             #print ("3 collision ", abs(self.draw.right - opponent.draw.left) )
             #print ("c speed ", self.speed_y )
 
             if abs(self.draw.top - opponent.draw.bottom) < 10 and self.speed_y > 0:
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1,-1.5)) 
                 self.speed_x*= -1
                 #print("ok 1")
 
             if abs(self.draw.bottom - opponent.draw.top) < 10 and self.speed_y < 0:
-                #self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
-                self.speed_x*= -1
+                #self.speed_y*= random.choice((1.5,1,-1.5)) 
+                self.speed_x*= random.choice((1.5,1,-1.5)) 
                 #print("ok 2")
 
             if abs(self.draw.right - opponent.draw.left) < 10 and self.speed_x < 0:
-                self.speed_y*= random.choice((1.5,1.4,1.3,1.2,1.1,1,0.5,-1,-1.1,-1.2,-1.3,-1.4,-1.5)) 
+                self.speed_y*= random.choice((1.5,1,-1.5)) 
                 self.speed_x*= -1
                 #print("ok 3")
             
@@ -138,10 +134,10 @@ class Player:
 
     def ai_activated(self,y_axys):
         
-        self.speed = 9
+        self.speed = 10
 
-        #if (round(pygame.time.get_ticks()) % 300) == 0:
-        #    self.random = random.randint(5, 10)
+        if (round(pygame.time.get_ticks()) % 300) == 0:
+            self.random = random.randint(5, 10)
 
         if self.draw.top <= 10:
            self.draw.top = 10
@@ -167,7 +163,6 @@ player = Player()
 opponent = Player()
 player.draw = pygame.Rect(screen_width - 30,screen_height/2 - 70,10,140)
 opponent.draw = pygame.Rect(30,screen_height/2 - 70,10,140)
-#opponent.speed = 10
 
 while True:
     # Handling input
@@ -241,6 +236,6 @@ while True:
         ball.animation()
         
     pygame.display.flip()
-    clock.tick(80)
+    clock.tick(60)
     
     #print(round(pygame.time.get_ticks()))
